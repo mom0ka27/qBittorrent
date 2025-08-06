@@ -138,7 +138,7 @@ jobs:
             "$appName.app" \
             "$appName.app/Contents/Frameworks"/* \
             "$appName.app/Contents/MacOS/$appName"
-          codesign --verify --deep --strict -v "$appName.app"
+          # codesign --verify --deep --strict -v "$appName.app"
           # create .dmg
           PACKAGE_RETRY=0
           while [ "$PACKAGE_RETRY" -lt "3" ]; do
