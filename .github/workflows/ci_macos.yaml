@@ -134,10 +134,10 @@ jobs:
           macdeployqt "$appName.app" -no-strip
           # code signing
           xattr -cr "$appName.app"
-          codesign --force --sign - --options runtime \
-            "$appName.app" \
-            "$appName.app/Contents/Frameworks"/* \
-            "$appName.app/Contents/MacOS/$appName"
+          # codesign --force --sign - --options runtime \
+          #   "$appName.app" \
+          #   "$appName.app/Contents/Frameworks"/* \
+          #   "$appName.app/Contents/MacOS/$appName"
           # codesign --verify --deep --strict -v "$appName.app"
           # create .dmg
           PACKAGE_RETRY=0
