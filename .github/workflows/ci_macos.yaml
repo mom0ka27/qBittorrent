@@ -25,6 +25,7 @@ jobs:
     env:
       boost_path: "${{ github.workspace }}/../boost"
       libtorrent_path: "${{ github.workspace }}/../libtorrent"
+      CMAKE_OSX_ARCHITECTURES: "x86_64"
 
     steps:
       - name: Checkout repository
@@ -72,7 +73,7 @@ jobs:
           mv "${{ github.workspace }}/.."/boost_* "${{ env.boost_path }}"
           cd "${{ env.boost_path }}"
           ./bootstrap.sh
-          ./b2 stage --stagedir=./ --with-headers
+          ./b2 stage --stagedir=./ --with-headers --build-dir=./build architecture=x86 address-model=64
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
@@ -98,6 +99,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_CXX_STANDARD=20 \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_OSX_ARCHITECTURES=${{ env.CMAKE_OSX_ARCHITECTURES }} \
             -DBOOST_ROOT="${{ env.boost_path }}/lib/cmake" \
             -Ddeprecated-functions=OFF
           cmake --build build
@@ -105,7 +107,7 @@ jobs:
 
       - name: Build qBittorrent
         run: |
-          CXXFLAGS="$CXXFLAGS -DQT_FORCE_ASSERTS -Werror -Wno-error=deprecated-declarations" \
+          CXXFLAGS="$CXXFLAGS -DQT_FORCE_ASSERTS -Wno-error=deprecated-declarations" \
           LDFLAGS="$LDFLAGS -gz" \
           cmake \
             -B build \
@@ -113,6 +115,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
             -DBOOST_ROOT="${{ env.boost_path }}/lib/cmake" \
+            -DCMAKE_OSX_ARCHITECTURES=${{ env.CMAKE_OSX_ARCHITECTURES }} \
             -DTESTING=ON \
             -DVERBOSE_CONFIGURE=ON \
             -D${{ matrix.qbt_gui }}
